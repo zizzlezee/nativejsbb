@@ -1,0 +1,598 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>test</title>
+    <link rel="stylesheet" href="nativejsbb.css" />
+    <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+    <script>
+
+        function NativeJSBBEditor(options) {
+
+            var _target = {};
+
+
+            var _data = {
+
+                wrap: {},
+                
+                watermark: {},
+
+                tagElements_wrap: {},
+
+                tagElements: [],
+
+                textElement_wrap: {},
+
+                textElement: {}
+
+            };
+            
+
+            var _BBEditorDOMobj = {};
+
+
+            function modal(props) {
+
+
+                var windowSize = function () {
+
+                    return {
+
+                        Width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth || window.screen.width || 0,
+
+                        Height: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight || window.screen.height || 0
+
+                    };
+
+                }
+
+
+                var closeHandler = function () {
+
+                    var ov = document.getElementsByClassName("bbeditor__overlay");
+
+                    var wnd = document.getElementsByClassName("bbeditor__modal__wrapper");
+
+                    if (ov.length) {
+
+                        for (var i = 0; i < ov.length; i++)
+                            ov[i].parentNode.removeChild(ov[i]);
+
+                    }
+
+                    if (wnd.length) {
+
+                        for (var i = 0; i < wnd.length; i++)
+                            wnd[i].parentNode.removeChild(wnd[i]);
+
+                    }
+
+                }
+
+
+                var okHandler = function () {
+
+                    var sender = this;
+
+                    var fieldsValues = [];
+
+                    var inputs = body.getElementsByTagName('input'),
+                        selects = body.getElementsByTagName('select');
+
+                    if (inputs.length) {
+                        for (var i = 0; i < inputs.length; i++) {
+                            fieldsValues.push(inputs[i].getAttribute('tagOption') + '="' + inputs[i].value + '"');
+                        }
+                    }
+                    
+                    if (selects.length) {
+                        for (var i = 0; i < selects.length; i++)
+                            fieldsValues.push(selects[i].getAttribute('tagOption') + '="' + selects[i].options[selects[i].selectedIndex].value + '"');
+                    }
+                    
+
+                    insertBB(props.tag, fieldsValues);
+                    
+                }
+
+
+                var overlay = document.createElement("div"),
+                    wrapper = document.createElement("div"),
+                    wnd = document.createElement("div"),
+                    head = document.createElement("div"),
+                    body = document.createElement("div");
+
+
+                body.className = 'body';
+
+
+                head.className = 'head';
+                head.innerHTML = props.modal.Title || "Заголовок окна";
+
+
+                wnd.className = 'wnd';
+
+
+                wrapper.className = 'bbeditor__modal__wrapper';
+                wrapper.style.width = (props.modal.Width ? props.modal.Width : 200) + 'px';
+                wrapper.style.left = ((windowSize().Width / 2) - ((props.modal.Width ? props.modal.Width : 200) / 2)) + 'px';
+
+
+                overlay.className = 'bbeditor__overlay';
+                overlay.addEventListener('click', closeHandler);
+
+
+                if (props &&
+                    props.modal &&
+                    props.modal.Fields &&
+                    Object.prototype.toString.call(props.modal.Fields) == "[object Array]") {
+
+                    var label,
+                        field;
+
+                    for (var i in props.modal.Fields) {
+
+
+                        label = document.createElement('label');
+                        label.innerHTML = props.modal.Fields[i].Label;
+
+
+                        if (props.modal.Fields[i].Type == "text" ||
+                             props.modal.Fields[i].Type) {
+
+
+                            field = document.createElement('input');
+                            field.type = 'text';
+                            field.name = 'f' + i;
+                            field.value = (props.modal.Fields[i].DefaultValue ? props.modal.Fields[i].DefaultValue : "");
+
+
+                        }
+
+
+                        if (props.modal.Fields[i].Type == "dropdown") {
+
+                            field = document.createElement('select');
+                            field.name = 'd' + i;
+
+                            var optionsHtml = [];
+
+                            if (props.modal.Fields[i].Values) {
+
+                                for (var val in props.modal.Fields[i].Values)
+                                    optionsHtml.push("<option value='" + props.modal.Fields[i].Values[val].Value + "'>" + props.modal.Fields[i].Values[val].Text + "</option>");
+
+                            }
+
+                            field.innerHTML = optionsHtml.join('');
+
+                        }
+
+
+                        field.setAttribute('tagOption', props.modal.Fields[i].TagOption);
+
+                        body.appendChild(label);
+                        body.appendChild(field);
+
+                    }
+
+                }
+
+
+                var buttons_wrap = document.createElement('div'),
+                    button_ok = document.createElement('input'),
+                    button_close = document.createElement('div');
+
+
+                buttons_wrap.className = 'btn';
+
+
+                button_ok.type = 'button';
+                button_ok.value = 'OK';
+                button_ok.addEventListener('click', function () { okHandler(); closeHandler(); });
+
+
+                button_close.type = 'button';
+                button_close.innerHTML = 'закрыть';
+                button_close.className = 'bbeditor__modal__close';
+                button_close.addEventListener('click', closeHandler);
+
+                /* creating DOM modal and overlay */
+                buttons_wrap.appendChild(button_ok);
+                buttons_wrap.appendChild(button_close);
+
+                wnd.appendChild(head);
+                wnd.appendChild(body);
+                wnd.appendChild(buttons_wrap);
+
+                wrapper.appendChild(wnd);
+
+                document.body.appendChild(overlay);
+
+                document.body.appendChild(wrapper);
+
+                wrapper.style.top = (windowSize().Height / 2) - (wrapper.clientWidth / 2) + 'px';
+
+            }
+
+
+            function insertBB(tag, tagOptions, justInsertTag)
+            {
+
+                var tagStart = tagOptions && tagOptions.length ? `[${tag} ${tagOptions.join('')}]` : `[${tag}]`,
+                    tagEnd = `[/${tag}]`;
+
+                var textarea_val = _data.textElement.value;
+
+                var selectionStarPos = _data.textElement.selectionStart;
+
+                var selectionEndPos = _data.textElement.selectionEnd;
+
+                var selectedText = textarea_val.substring(selectionStarPos, selectionEndPos);
+
+                var cursorPosition = 0,
+                    compiledText = "";
+
+                if (selectedText &&
+                    !justInsertTag) {
+
+                    cursorPosition = selectionEndPos + tagStart.length + tagEnd.length;
+
+                    compiledText = `${textarea_val.substring(0, selectionStarPos)}${tagStart}${selectedText}${tagEnd}${textarea_val.substring(selectionEndPos)}`;
+
+                }
+                else {
+
+                    cursorPosition = selectionStarPos + tagStart.length;
+
+                    compiledText = `${textarea_val.substring(0, selectionStarPos)}${tagStart}${tagEnd}${textarea_val.substring(selectionStarPos)}`;
+
+                }
+
+                _data.textElement.value = compiledText;
+
+                _data.textElement.focus();
+
+                _data.textElement.setSelectionRange(cursorPosition, cursorPosition);
+            }
+
+
+            if (this instanceof NativeJSBBEditor) { }
+            else {
+                return new NativeJSBBEditor(options);
+            }
+
+
+            //merge options
+            function _extendOptions() {
+
+                var baseOptions = {
+
+                    target: null,
+                    tags: [
+                        { tag: "b", separator: false },
+                        { tag: "s", separator: false },
+                        { tag: "i", separator: false },
+                        { tag: "u", separator: false },
+                        { separator: true }
+                    ],
+                    watermark: true
+
+                };
+
+                //merge options
+                for (var bO in baseOptions) {
+
+                    if (!options[bO]) {
+
+                        options[bO] = baseOptions[bO];
+
+                    }
+
+                }
+                
+
+                if (!options.tags ||
+                    !options.tags.length) {
+
+                    options.tags = baseOptions.tags;
+
+                }
+            }
+
+
+            //format bbObject
+            function _formHTMLInput() {
+
+                if (!options.target) {
+
+                    console.error('target is not declared');
+
+                }
+                else {
+
+                    _target = document.getElementById(options.target);
+
+                    if (_target) {
+
+                        var tag = {};
+                        
+                        for (var t in options.tags) {
+
+                            tag = document.createElement('div');
+
+                            if (!options.tags[t].space) {
+
+                                if (options.tags[t].caption) {
+                                    tag.innerHTML = options.tags[t].tag;
+                                }
+
+                                tag.className = 'tag';
+
+                                tag.setAttribute('tag', options.tags[t].tag);
+
+                                //store to tag prototype tag.options
+                                tag.BBEditor = options.tags[t];
+
+                            }
+                            else tag.className = 'tag space';
+                            
+                            _data.tagElements.push(tag);
+
+                        }
+
+                        _data.wrap = document.createElement('div');                        
+                        _data.wrap.className = 'bbeditor__wrap';
+
+
+                        _data.watermark = document.createElement('div');
+                        _data.watermark.className = 'watermark';
+                        _data.watermark.innerHTML = 'NativeJS BB-editor, <a href="http://heap.tech">heap.tech</a> for more info';
+
+
+                        _data.tagElements_wrap = document.createElement('div');
+                        _data.tagElements_wrap.className = 'tags__wrap';
+
+
+                        _data.textElement_wrap = document.createElement('div');
+                        _data.textElement_wrap.className = 'text__wrap';
+
+
+                        _data.textElement = document.createElement('textarea');                       
+                        _data.textElement.id = _target.id;
+
+                    }
+
+                }
+            }
+
+
+            //replace textarea to well-formed BBEditor wrapper
+            function _replaceTarget() {
+                
+                if (_data.wrap &&
+                    _data.tagElements_wrap &&
+                    _data.tagElements &&
+                    _data.textElement_wrap &&
+                    _data.textElement) {
+
+                    var container = _target.parentNode;
+
+                    container.removeChild(_target);
+                    
+                    for (var i in _data.tagElements) {
+
+                        _data.tagElements_wrap.appendChild(_data.tagElements[i]);
+
+                    }
+
+                    _data.textElement_wrap.appendChild(_data.textElement);
+
+                    if (options.watermark) {
+                        _data.wrap.appendChild(_data.watermark);
+                    }
+
+                    _data.wrap
+                            .appendChild(_data.tagElements_wrap)
+                            .appendChild(_data.textElement_wrap);
+                    
+                    _BBEditorDOMobj = _data.wrap;
+
+                    container.appendChild(_BBEditorDOMobj);
+                }
+
+            }
+            
+
+            //attach events to created element
+            function _attachEvents() {
+
+                for (var i in _data.tagElements) {
+                    
+
+                    _data.tagElements[i].addEventListener('click', function () {
+
+                        var sender = this;
+
+                        if (sender.BBEditor) {
+
+                            if (sender.BBEditor.modal)
+                                modal(sender.BBEditor);
+                            else
+                                insertBB(sender.getAttribute('tag'));
+
+                        }
+                    });
+
+                }
+
+            }
+
+
+            _extendOptions();
+
+
+            _formHTMLInput();
+
+
+            _replaceTarget();
+
+
+            _attachEvents();
+
+
+            return _BBEditorDOMobj;
+
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            var availableTags = [
+                    {
+                        tag: 'b'
+                    },
+                    {
+                        tag: 'i'
+                    },
+                    {
+                        tag: 'u'
+                    },
+                    {
+                        tag: 's'
+                    },
+                    {
+                        space: true
+                    },
+                    {
+                        tag: 'color',
+                        modal: {
+                            Title: 'Цвет текста',
+                            Width: 300,
+                            Fields:
+                                [{
+
+                                    Label: 'Цвет',
+                                    Type: 'dropdown',
+                                    TagOption: 'color',
+                                    Values: [{
+
+                                        Value: 'red',
+                                        Text: 'красный'
+
+                                    }, {
+
+                                        Value: 'green',
+                                        Text: 'зеленый'
+
+                                    }, {
+
+                                        Value: 'blue',
+                                        Text: 'синий'
+
+                                    }]
+                                }]
+                        }
+                    },
+                    {
+                        tag: 'sup'
+                    },
+                    {
+                        tag: 'sub'
+                    },
+                    {
+                        space: true
+                    },
+                    {
+                        tag: 'link',
+                        caption: null,
+                        space: false,
+                        modal: {
+                            Title: 'Вставить ссылку',
+                            Width: 300,
+                            Fields:
+                                [{
+
+                                    Label: 'Ссылка',
+                                    Type: 'text',
+                                    DefaultValue: 'http://',
+                                    TagOption: 'url'
+
+                                }]
+                        }
+                    },
+                    {
+                        tag: 'image',
+                        caption: null,
+                        space: false,
+                        modal: {
+                            Title: 'Вставить картинку',
+                            Width: 300,
+                            Fields: [{
+
+                                Label: 'Адрес картинки',
+                                Type: 'text',
+                                DefaultValue: 'http://',
+                                TagOption: 'url'
+
+                            }, {
+
+                                Label: 'Ширина картинки (в % или px)',
+                                Type: 'text',
+                                TagOption: 'width'
+
+                            }]
+                        }
+                    },
+                    {
+                        tag: 'quote'
+                    },
+                    {
+                        tag: 'code',
+                        modal: {
+                            Title: 'Подстветка синтаксиса',
+                            Width: 300,
+                            Fields: [{
+                                Label: 'Синтаксис',
+                                Type: 'dropdown',
+                                TagOption: 'syntax',
+                                Values: [{
+                                    Value: 'cplusplus',
+                                    Text: 'C++'
+                                }, {
+                                    Value: 'php',
+                                    Text: 'PHP'
+                                }, {
+
+                                    Value: 'csharp',
+                                    Text: 'C#'
+                                }]
+                            }]
+                        }
+                    }
+            ];
+
+            new NativeJSBBEditor({
+                target: 'bbeditor',
+                tags: availableTags
+            });
+
+        });
+
+    </script>
+
+    
+    <h1>
+        Light and native JS bb-editor
+    </h1>
+    <div> 
+        <textarea id="bbeditor"></textarea>
+    </div>
+    <div>
+
+    </div>
+</body>
+</html>

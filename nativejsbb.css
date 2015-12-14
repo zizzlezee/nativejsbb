@@ -1,0 +1,220 @@
+﻿.bbeditor__overlay
+{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: #000;
+    opacity: .5;
+    z-index: 1
+}
+
+/* bbeditor modal window */
+.bbeditor__modal__wrapper
+{
+    position: absolute;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.4);
+    z-index: 2;
+
+    -webkit-border-radius:4px;
+       -moz-border-radius:4px;
+            border-radius:4px
+}
+
+    .bbeditor__modal__wrapper .wnd
+    {
+        background:#fff;
+
+        -webkit-border-radius:2px;
+           -moz-border-radius:2px;
+                border-radius:2px
+    }
+
+    .bbeditor__modal__wrapper .wnd .head
+    {
+        height:36px;
+        line-height:36px;
+        font-size:22px;
+        border-bottom:1px solid #ddd;        
+
+        padding-left:10px;
+    }
+
+    .bbeditor__modal__wrapper .wnd .body
+    {
+        padding:8px 10px;
+    }
+
+    .bbeditor__modal__wrapper .wnd .btn
+    {
+        margin-top:10px;
+        padding:8px 10px;
+        border-top:1px solid #ddd
+    }
+
+        .bbeditor__modal__wrapper .wnd .btn .bbeditor__modal__close
+        {
+            float: right;
+            color: #e54b4b;
+            border-bottom: 1px dotted;
+            cursor:pointer;
+            margin-top:5px
+        }
+/* /bbeditor modal/ */
+
+/* bb-editor textarea css-styles */
+div.bbeditor__wrap
+{
+
+
+}
+
+    div.bbeditor__wrap .watermark
+    {
+        height: 0;
+        float: right;
+        margin: 10px 14px 0 0;
+        font-size: 11px;
+        color: #B3B3B3;
+
+        text-shadow: 0px 1px 0px #FFFFFF;
+    }
+
+        div.bbeditor__wrap .watermark a
+        {
+            color: #B3B3B3
+        }
+
+    div.bbeditor__wrap .tags__wrap
+    {
+        border: 1px solid #ddd;
+        border-bottom: 0;
+        background: whitesmoke;
+        padding: 5px 10px
+    }
+
+        div.bbeditor__wrap  .tags__wrap .tag
+        {
+            float:left;
+
+            width: 21px;
+            height: 21px;    
+            background: url(http://heap.tech/content/img/editor_sprite.png) center no-repeat;
+            background-size: 404px;
+            margin-right: 8px;
+            cursor: pointer;
+            margin: 5px 5px 4px;
+
+            opacity: .5;
+
+            -webkit-transition:opacity ease-in .15s;
+               -moz-transition:opacity ease-in .15s;
+                    transition:opacity ease-in .15s;
+        }
+
+            div.bbeditor__wrap .tags__wrap .tag:hover { opacity:0.9 }
+
+            div.bbeditor__wrap .tags__wrap .tag[tag=b]
+            {
+                background-position:0 0;
+                width:16px
+            }
+
+            div.bbeditor__wrap .tags__wrap .tag[tag=i]
+            {
+                background-position: -17px 0;
+                width: 9px;
+                margin-left: 8px;
+                margin-right: 8px
+            }
+
+            div.bbeditor__wrap .tags__wrap .tag[tag=u]
+            {
+                background-position: -26px 0;
+            }
+
+            div.bbeditor__wrap .tags__wrap .tag[tag=s]
+            {
+                background-position: -48px 0;
+            }
+
+            div.tags__wrap .tag[tag=sup]
+            {
+                background-position: -69px 0        
+            }
+
+            div.tags__wrap .tag[tag=sub]
+            {
+                background-position: -90px 4px        
+            }
+
+            div.tags__wrap .tag[tag=link]
+            {
+                background-position: -154px 0;
+                width: 22px;
+            }
+
+            div.tags__wrap .tag[tag=image]
+            {
+                background-position: -133px 0
+            }
+
+            div.tags__wrap .tag[tag=header]
+            {
+                background-position: -176px 0
+            }
+
+            div.tags__wrap .tag[tag=color]
+            {
+                background-position: -219px 0;
+                width: 20px
+            }
+    
+            div.tags__wrap .tag[tag=quote]
+            {
+                background-position: -304px 0;
+                width:23px
+            }
+
+            div.tags__wrap .tag[tag=code]
+            {
+                background-position: -111px 0        
+            }
+
+            div.tags__wrap .tag[tag=cut]
+            {
+                background-position: -282px 3px
+            }
+
+            div.tags__wrap .tag.space
+            {
+                background: transparent;
+                width: 36px;
+                margin: 0;
+                cursor: default
+            }
+
+    div.bbeditor__wrap .text__wrap
+    {
+        clear:both;
+    }
+
+        div.bbeditor__wrap .text__wrap textarea
+        {
+            width:100%;
+            outline: none;
+            resize: vertical;
+            display: block;
+
+            box-sizing: border-box;
+            border: 1px solid #ddd;           
+            
+            min-height: 128px;
+
+            padding: 5px 10px;
+            
+            margin:0;
+        }
+    /* /bb-editor textarea css-styles/ */

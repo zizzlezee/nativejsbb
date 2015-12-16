@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace UI.Logic
+public enum BBPatternEnum : byte
 {
     BR = 0,
     Bold = 1,

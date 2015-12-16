@@ -59,8 +59,6 @@
             },
             {
               tag: 'link',
-              caption: null,
-              space: false,
               modal: {
                 Title: 'Insert link',
                 Width: 300,
@@ -80,4 +78,4 @@
   
   To transform posted data to html - you should use c# parser, it's specially designed for the nativeJS bb-editor.
   
-  Project including c# parser source (BBEditor.cs)
+  Project including c# parser source (BBParser.cs)

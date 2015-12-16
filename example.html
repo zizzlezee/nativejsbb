@@ -3,10 +3,15 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>NativeJSBBEditor usage</title>
-    <script src="nativejsbb.js"></script>
-    <link rel="stylesheet" href="nativejsbb.css" />
+    <title>NativeJSBBEditor</title>
+    <script src="nativejsbb/nativejsbb.js"></script>
+    <script src="http://heap.tech/usercontent/git_sources/tjHighlight/tjHighlight.core.js"></script>
+    <script src="http://heap.tech/usercontent/git_sources/tjHighlight/tjHighlight.syntax.javascript.js"></script>
+
+    <link rel="stylesheet" href="nativejsbb/nativejsbb.css" />
     <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="http://heap.tech/usercontent/git_sources/tjHighlight/tjHighlight.css" />
+    <link rel="stylesheet" href="http://heap.tech/usercontent/git_sources/tjHighlight/tjHighlight_javascript.css" />
 </head>
 <body>
     <script>
@@ -140,6 +145,13 @@
                 tags: availableTags
             });
 
+            if (tjHighlight &&
+                typeof tjHighlight === 'function') {
+                
+                tjHighlight(document.getElementById("example"), { lines: true });
+
+            }
+
         });
 
     </script>
@@ -193,7 +205,7 @@
                 
                 or by using native js
 
-                <div style="font:normal 15px consolas; margin:3px 6px; padding:4px; border:1px solid #d4d4d4; background:whitesmoke;">
+                <div class="code">
                     document.addEventListener('DOMContentLoaded', function () {<br />
                     <br />
                     &nbsp;new NativeJSBBEditor({ target: 'bbeditor' });<br />
@@ -213,85 +225,76 @@
         </h1>
     </div>
     <div>
-        <div class="margin code">
-            document.addEventListener('DOMContentLoaded', function () {<br />
-            <br />
-            var availableTags = [<br />
-            { tag: 'b' }, //flat tags, like bold, italic etc...<br />
-            { tag: 'i' },<br />
-            { tag: 'u', space: false },<br />
-            { tag: 's', space: false, caption: 'S' },   //flat tag with caption on a button<br />
-            { space: true }, //just space<br />  
-            {<br />
-                <div class="tab"></div>tag: 'color',                                    //tag<br/>
-                <div class="tab"></div>modal: {                                         //modal window will be shown<br />
-                <div class="tab"></div><div class="tab"></div>Title: 'Font color',      //modal window title<br />
-                <div class="tab"></div><div class="tab"></div>Width: 300,               //modal window width (numeric, default 200)<br />
-                <div class="tab"></div><div class="tab"></div>ApplyButton: 'apply',     //apply button caption (by default caption is OK)<br />
-                <div class="tab"></div><div class="tab"></div>CloseButton: 'close',     //close (modal closer) button caption (by default caption is cancel)<br />
-                <div class="tab"></div><div class="tab"></div>Fields: [{                //modal window fields description. dropdown select with options<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div>Label: 'Color',<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div>Type: 'dropdown',<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div>TagOption: 'color',<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div>Values: [{<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div><div class="tab"></div>Value: 'red',<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div><div class="tab"></div>Text: 'red'<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div>},<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div>{<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div><div class="tab"></div>Value: 'green',<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div><div class="tab"></div>Text: 'green'<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div>},<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div>{<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div><div class="tab"></div>Value: 'blue',<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div><div class="tab"></div>Text: 'blue'<br />
-                <div class="tab"></div><div class="tab"></div><div class="tab"></div>}]<br />
-                <div class="tab"></div><div class="tab"></div>}]<br />
-            }<br />
-            },<br />
-            {<br />
-            <div class="tab"></div>tag: 'link',<br />
-            <div class="tab"></div>caption: null,<br />
-            <div class="tab"></div>space: false,<br />
-            <div class="tab"></div>modal: {<br />
-            <div class="tab"></div><div class="tab"></div>Title: 'Insert link',<br />
-            <div class="tab"></div><div class="tab"></div>Width: 300,<br />
-            <div class="tab"></div><div class="tab"></div>Fields: [{ //one input field with default value<br/>            
-                    <br />
-            <div class="tab"></div><div class="tab"></div><div class="tab"></div>Label: 'Ссылка',<br />
-            <div class="tab"></div><div class="tab"></div><div class="tab"></div>Type: 'text',<br />
-            <div class="tab"></div><div class="tab"></div><div class="tab"></div>DefaultValue: 'http://',<br />
-            <div class="tab"></div><div class="tab"></div><div class="tab"></div>TagOption: 'url'<br />
-                    <br />
-            <div class="tab"></div><div class="tab"></div>}]<br />
-            <div class="tab"></div>}<br />
-            }];<br />
-            <br />
-            <div class="tab"></div>new NativeJSBBEditor({ target: 'bbeditor', availableTags }); //init plugin and apply it to #bbeditor<br />
-            <br />
-            });
-        </div>
+        <div class="margin" id="example" syntax="js">
+    document.addEventListener('DOMContentLoaded', function () {
 
-        <div class="margin">
-            tag.<strong>modal</strong> propery declares a lot of parameters for a modal window. Which will be shown on tag click. Object
-            <ol>
-                <li>
-                    <strong>modal.Title</strong> - modal window title. String
-                </li>
-                <li>
-                    <strong>modal.Width</strong> - modal window width in pixels. Numeric
-                </li>
-                <li>
-                    <strong>modal.Fields</strong> - fields, like text or select. Each one is describing params like label, defaultValue and name. Objects array
-                </li>
-            </ol>
-        </div>
+        var availableTags = [
+
+            { tag: 'b' },   //flat tags, like bold, italic etc...
+            { tag: 'u', space: false },
+            { tag: 's', space: false, caption: 'S' },   //flat tag with caption on a button
+            { space: true },    //just space
+            {
+                //tag
+                tag: 'color',
+                //modal window will be shown
+                modal: {    
+                    //modal window title
+                    Title: 'Font color',
+                    //modal window width (numeric, default 200)
+                    Width: 300,
+                    //apply button caption (by default caption is OK)
+                    ApplyButton: 'apply',
+                    //close (modal closer) button caption (by default caption is cancel)
+                    CloseButton: 'close',
+                    //modal window fields description. dropdown select with options
+                    Fields: [{  
+                        //field label
+                        Label: 'Color',
+                        //field type (input or checkbox, input by default)
+                        Type: 'dropdown',
+                        //tag option is my_own_prop, so it seems like that: [color my_own_prop='green']
+                        TagOption: 'my_own_prop',
+                        Values: [{
+                                Value: 'red',
+                                Text: 'red color'
+                            }, {
+                                Value: 'green',
+                                Text: 'green color'
+                            }, {
+                                Value: 'blue',
+                                Text: 'blue color'
+                        }]
+                    }]
+                }
+            },
+            {
+                tag: 'link',
+                modal: {
+                    Title: 'Insert link',
+                    Width: 300,
+                    //one input field with default value
+                    Fields: [{
+                        Label: 'Ссылка',
+                        Type: 'text',
+                        DefaultValue: 'http://',
+                        TagOption: 'url'
+                    }]
+                }
+            }
+
+        }];
+
+        //init plugin and apply it to #bbeditor
+        new NativeJSBBEditor({ target: 'bbeditor', availableTags });
+    })</div>
 
         <div class="margin">
             <h1>Transform BB to html-tags on backend</h1>
         </div>
         <div>            
             To transform posted data to html - you should use c# parser, it's specially designed for the nativeJS bb-editor.<br/>
-            Project including c# parser source (<a href="https://raw.githubusercontent.com/zizzlezee/nativejsbb/master/BBEditor.cs">BBEditor.cs</a>)
+            Project including c# parser source (<a href="https://raw.githubusercontent.com/zizzlezee/nativejsbb/master/BBParser.cs">BBEditor.cs</a>)
         </div>
     </div>
 </body>

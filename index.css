@@ -1,7 +1,49 @@
 ﻿body
 {
-    font: normal 14px Tahoma, Arial, Verdana;
-    color:#393939
+    font: normal 16px Tahoma, Arial, Verdana;
+    color:#2A2A2A
+}
+
+h1
+{
+    
+    margin:0;
+    font-weight:normal;
+
+}
+
+div.note
+{
+    font-size:13px
+}
+
+div.margin
+{
+    margin-bottom:20px
+}
+
+div.tab
+{
+    display:inline-block;
+    margin-left:20px;
+}
+
+div.code
+{
+    font:normal 15px consolas; 
+    margin:10px 0;
+    padding:4px 6px;
+    border:1px solid #ddd;
+    background:rgba(251, 251, 251, .7)
+}
+
+a{
+    color:#2a5be0;
+}
+
+a:hover
+{
+    text-decoration:none;
 }
 
 input[type=text],

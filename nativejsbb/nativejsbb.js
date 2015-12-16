@@ -61,7 +61,7 @@
 
 
                     head.className = 'head';
-                    head.innerHTML = mConfig.Title || "Заголовок окна";
+                    head.innerHTML = mConfig.Title || "Title";
 
 
                     wnd.className = 'wnd';
@@ -299,11 +299,14 @@
 
                     target: null,
                     tags: [
-                        { tag: "b", separator: false },
-                        { tag: "s", separator: false },
-                        { tag: "i", separator: false },
-                        { tag: "u", separator: false },
-                        { separator: true }
+                        { tag: 'b' },
+                        { tag: 's' },
+                        { tag: 'i' },
+                        { tag: 'u' },
+                        { space: true },
+
+                        { space: true },
+                        { tag: 'quote' },
                     ],
                     watermark: true
 

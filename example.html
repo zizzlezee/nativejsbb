@@ -27,101 +27,85 @@
                     {
                         tag: 'color',
                         modal: {
-                            Title: 'Цвет текста',
+                            Title: 'Font color',
                             Width: 300,
                             ApplyButton: 'OK',
                             CloseButton: 'cancel',
                             Fields:
                                 [{
 
-                                    Label: 'Цвет',
+                                    Label: 'Color',
                                     Type: 'dropdown',
                                     TagOption: 'color',
                                     Values: [{
 
                                         Value: 'red',
-                                        Text: 'красный'
+                                        Text: 'red color'
 
                                     }, {
 
                                         Value: 'green',
-                                        Text: 'зеленый'
+                                        Text: 'green color'
 
                                     }, {
 
                                         Value: 'blue',
-                                        Text: 'синий'
+                                        Text: 'blue color'
 
                                     }]
                                 }]
                         }
                     },
-                    {
-                        tag: 'sup'
-                    },
-                    {
-                        tag: 'sub'
-                    },
-                    {
-                        space: true
-                    },
+                    { tag: 'sup' },
+                    { tag: 'sub' },
+                    { space: true },
                     {
                         tag: 'link',
-                        caption: null,
-                        space: false,
                         modal: {
-                            Title: 'Вставить ссылку',
-                            Width: 300,
-                            ApplyButton: 'OK',
-                            CloseButton: 'cancel',
-                            Fields:
-                                [{
-
-                                    Label: 'Ссылка',
-                                    Type: 'text',
-                                    DefaultValue: 'http://',
-                                    TagOption: 'url'
-
-                                }]
-                        }
-                    },
-                    {
-                        tag: 'image',
-                        caption: null,
-                        space: false,
-                        modal: {
-                            Title: 'Вставить картинку',
+                            Title: 'Insert link',
                             Width: 300,
                             ApplyButton: 'OK',
                             CloseButton: 'cancel',
                             Fields: [{
 
-                                Label: 'Адрес картинки',
+                                Label: 'Link',
                                 Type: 'text',
                                 DefaultValue: 'http://',
                                 TagOption: 'url'
-
-                            }, {
-
-                                Label: 'Ширина картинки (в % или px)',
-                                Type: 'text',
-                                TagOption: 'width'
 
                             }]
                         }
                     },
                     {
-                        tag: 'quote'
-                    },
-                    {
-                        tag: 'code',
+                        tag: 'image',
                         modal: {
-                            Title: 'Подстветка синтаксиса',
+                            Title: 'Insert image',
                             Width: 300,
                             ApplyButton: 'OK',
                             CloseButton: 'cancel',
                             Fields: [{
-                                Label: 'Синтаксис',
+                                Label: 'Image url',
+                                Type: 'text',
+                                DefaultValue: 'http://',
+                                TagOption: 'url'
+                            }, {
+                                Label: 'Image width (в % or px)',
+                                Type: 'text',
+                                TagOption: 'width'
+                            }]
+                        }
+                    },
+                    { space: true },
+                    { tag: 'quote' },
+                    {
+                        tag: 'code',
+                        modal: {
+                            Title: 'Source highlight',
+                            Width: 300,
+                            ApplyButton: 'OK',
+                            CloseButton: 'cancel',
+                            Fields: [{
+                                Label: 'Syntax',
                                 Type: 'dropdown',
                                 TagOption: 'syntax',
                                 Values: [{
@@ -137,8 +121,7 @@
                                 }]
                             }]
                         }
-                    }
-            ];
+                    }];
 
             new NativeJSBBEditor({
                 target: 'bbeditor',
@@ -286,7 +269,7 @@
         }];
 
         //init plugin and apply it to #bbeditor
-        new NativeJSBBEditor({ target: 'bbeditor', availableTags });
+        new NativeJSBBEditor({ target: 'bbeditor', tags: availableTags });
     })</div>
 
         <div class="margin">

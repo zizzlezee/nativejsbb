@@ -71,7 +71,7 @@
               }
             }];
             
-            new NativeJSBBEditor({ target: 'bbeditor', availableTags }); //init plugin and apply it to #bbeditor
+            new NativeJSBBEditor({ target: 'bbeditor', tags: availableTags }); //init plugin and apply it to #bbeditor
       });
   
 #Transform BB to html-tags on backend

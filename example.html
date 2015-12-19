@@ -71,7 +71,13 @@
                                 Label: 'Link',
                                 Type: 'text',
                                 DefaultValue: 'http://',
-                                TagOption: 'url'
+                                TagOption: 'href'
+
+                            },{
+
+                                Type: 'hidden',
+                                DefaultValue: '_blank',
+                                TagOption: 'target'
 
                             }]
                         }
@@ -87,9 +93,9 @@
                                 Label: 'Image url',
                                 Type: 'text',
                                 DefaultValue: 'http://',
-                                TagOption: 'url'
+                                TagOption: 'src'
                             }, {
-                                Label: 'Image width (в % or px)',
+                                Label: 'Image width (% or px)',
                                 Type: 'text',
                                 TagOption: 'width'
                             }]

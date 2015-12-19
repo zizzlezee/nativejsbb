@@ -7,16 +7,16 @@
     top: 0;
     background: #000;
     opacity: .5;
-    z-index: 1
+    z-index: 5
 }
 
 /* bbeditor modal window */
 .bbeditor__modal__wrapper
 {
-    position: absolute;
+    position: fixed;
     padding: 10px;
     background-color: rgba(255, 255, 255, 0.4);
-    z-index: 2;
+    z-index: 6;
 
     -webkit-border-radius:2px;
        -moz-border-radius:2px;
@@ -47,6 +47,22 @@
         padding:8px 10px;
     }
 
+        .bbeditor__modal__wrapper .wnd .body input,
+        .bbeditor__modal__wrapper .wnd .body select
+        {
+
+            font-size: 15px;
+            padding: 5px 9px
+        }
+
+        .bbeditor__modal__wrapper .wnd .body label
+        {
+            font-size: 12px;
+            color: #6D6D6D
+        }
+
+
+
     .bbeditor__modal__wrapper .wnd .btn
     {
         margin-top:10px;
@@ -54,13 +70,21 @@
         border-top:1px solid #ddd
     }
 
+        .bbeditor__modal__wrapper .wnd .btn .button
+        {
+            font-size: 15px;
+            padding: 0.3em 1em .35em
+        }
+
+
         .bbeditor__modal__wrapper .wnd .btn .bbeditor__modal__close
         {
             float: right;
             color: #e54b4b;
             border-bottom: 1px dotted;
             cursor:pointer;
-            margin-top:5px
+            margin-top:5px;
+            font-size:15px;
         }
 /* /bbeditor modal/ */
 
@@ -211,7 +235,7 @@ div.bbeditor__wrap
             box-sizing: border-box;
             border: 1px solid #ddd;           
             
-            min-height: 128px;
+            min-height: 428px;
 
             padding: 5px 10px;
             

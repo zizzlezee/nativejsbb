@@ -31,6 +31,35 @@ function NativeJSBBEditor(options) {
     };
 
 
+    var fn = {
+
+        Value: '',
+
+        Length: 0,
+
+        CursorPosition: 0,
+
+        Modal: function (tag, modalOptions, useNoSelection) {
+
+            var o = {
+                tag: tag ? tag : 'tag',
+                modal: modalOptions,
+                useNoSelection: useNoSelection,
+            };
+
+            modal(o);
+
+        },
+
+        Insert: function (tag, options, useNoSelection) {
+
+            insertBB(tag, options, useNoSelection);
+
+        }
+
+    }
+
+
     if (this instanceof NativeJSBBEditor) { }
     else {
         return new NativeJSBBEditor(options);
@@ -45,16 +74,16 @@ function NativeJSBBEditor(options) {
 
             var screenSize = windowSize();
 
-            var mConfig = props.modal;
+            var mConfig = props.modal ? props.modal : {};
 
             var overlay = document.createElement("div"),
-                 wrapper = document.createElement("div"),
-                 wnd = document.createElement("div"),
-                 head = document.createElement("div"),
-                 body = document.createElement("div"),
-                 buttons_wrap = document.createElement('div'),
-                 button_ok = document.createElement('div'),
-                 button_close = document.createElement('div');
+                wrapper = document.createElement("div"),
+                wnd = document.createElement("div"),
+                head = document.createElement("div"),
+                body = document.createElement("div"),
+                buttons_wrap = document.createElement('div'),
+                button_ok = document.createElement('div'),
+                button_close = document.createElement('div');
 
 
             body.className = 'body';
@@ -172,14 +201,13 @@ function NativeJSBBEditor(options) {
             }
 
 
-            insertBB(props.tag, fieldsValues);
+            insertBB(props.tag, fieldsValues, props.useNoSelection);
 
         }
 
-
         var wnd = render();
 
-        /*rendering modal fields (input or select) */
+        /* rendering modal fields (input or select) */
         if (props &&
             props.modal &&
             props.modal.Fields &&
@@ -205,14 +233,14 @@ function NativeJSBBEditor(options) {
 
                 if (props.modal.Fields[i].Type == "text" ||
                     props.modal.Fields[i].Type == "hidden" ||
-                     !props.modal.Fields[i].Type) {
+                    !props.modal.Fields[i].Type) {
 
 
                     field = document.createElement('input');
                     field.type = props.modal.Fields[i].Type ? props.modal.Fields[i].Type : 'text';
                     field.name = 'f' + i;
                     field.value = (props.modal.Fields[i].DefaultValue ? props.modal.Fields[i].DefaultValue : "");
-
+                    field.disabled = props.modal.Fields[i].Disabled;
 
                     wnd.body.appendChild(field);
 
@@ -224,10 +252,14 @@ function NativeJSBBEditor(options) {
 
                     field = document.createElement('select');
                     field.name = 'd' + i;
+                    field.disabled = props.modal.Fields[i].Disabled;
 
                     var optionsHtml = [];
 
-                    if (props.modal.Fields[i].Values) {
+                    var items = props.modal.Fields[i].Values;
+
+                    if (Object.prototype.toString.call(items) === '[object Array]' &&
+                        items.length) {
 
                         for (var val in props.modal.Fields[i].Values)
                             optionsHtml.push("<option value='" + props.modal.Fields[i].Values[val].Value + "'>" + props.modal.Fields[i].Values[val].Text + "</option>");
@@ -276,34 +308,30 @@ function NativeJSBBEditor(options) {
 
         var selectedText = textarea_val.substring(selectionStarPos, selectionEndPos);
 
-        var cursorPosition = 0,
-            compiledText = "";
+        var cursorPosition = 0;
 
         if (selectedText &&
             !justInsertTag) {
 
             cursorPosition = selectionEndPos + tagStart.length + tagEnd.length;
 
-            compiledText = `${textarea_val.substring(0, selectionStarPos)}${tagStart}${selectedText}${tagEnd}${textarea_val.substring(selectionEndPos)}`;
+            _data.textElement.value = `${textarea_val.substring(0, selectionStarPos)}${tagStart}${selectedText}${tagEnd}${textarea_val.substring(selectionEndPos)}`;
 
         }
         else {
 
-            cursorPosition = selectionStarPos + tagStart.length;
+            cursorPosition = selectionStarPos + tagStart.length + tagEnd.length;
 
-            compiledText = `${textarea_val.substring(0, selectionStarPos)}${tagStart}${tagEnd}${textarea_val.substring(selectionStarPos)}`;
+            _data.textElement.value = `${textarea_val.substring(0, selectionStarPos)}${tagStart}${tagEnd}${textarea_val.substring(selectionStarPos)}`;
 
         }
 
-        _data.textElement.value = compiledText;
-
-        _data.textElement.focus();
-
         _data.textElement.setSelectionRange(cursorPosition, cursorPosition);
+
     }
 
 
-    //merge options
+    //merge user options and basic
     function _extendOptions() {
 
         var baseOptions = {
@@ -314,8 +342,6 @@ function NativeJSBBEditor(options) {
                 { tag: 's' },
                 { tag: 'i' },
                 { tag: 'u' },
-                { space: true },
-
                 { space: true },
                 { tag: 'quote' },
             ],
@@ -405,6 +431,7 @@ function NativeJSBBEditor(options) {
                 _data.textElement.id = _target.id;
                 _data.textElement.name = _target.name;
                 _data.textElement.className = _target.className;
+                _data.textElement.innerHTML = _target.innerHTML;
 
             }
 
@@ -459,6 +486,13 @@ function NativeJSBBEditor(options) {
     //attach events to created element
     function _attachEvents() {
 
+        _data.textElement.onkeypress = function () {
+
+            fn.CursorPosition = _data.textElement.selectionStart;
+
+            fn.Length = _data.textElement.value.length;
+        }
+
         for (var i in _data.tagElements) {
 
 
@@ -471,7 +505,7 @@ function NativeJSBBEditor(options) {
                     if (sender.BBEditor.modal)
                         modal(sender.BBEditor);
                     else
-                        insertBB(sender.getAttribute('tag'));
+                        insertBB(sender.getAttribute('tag'), {}, sender.BBEditor.useNoSelection);
 
                 }
             });
@@ -488,10 +522,26 @@ function NativeJSBBEditor(options) {
     }
 
 
+    //extend BBEditor object by public functions
+    function _extendEditor() {
+        _data.wrap.NativeJSBBEditor = {};
+
+        for (var i in fn) {
+
+            _data.wrap.NativeJSBBEditor[i] = fn[i];
+
+        }
+
+    }
+
+
     _extendOptions();
 
 
     _formHTMLInput();
+
+
+    _extendEditor();
 
 
     _replaceTarget();
